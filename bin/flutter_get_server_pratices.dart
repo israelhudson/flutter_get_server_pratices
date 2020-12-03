@@ -13,7 +13,6 @@ void main() {
   );
 }
 
-
 class Home extends StatelessWidget {
   var map = Map();
   @override
@@ -54,20 +53,20 @@ Future connMysql() async {
       host: 'localhost', port: 3306, user: 'root', db: 'test'));
 
   // Create a table
-  // await conn.query(
-  //     'CREATE TABLE users (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, name varchar(255), email varchar(255), age int)');
+  await conn.query(
+      'CREATE TABLE IF NOT EXISTS users (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, name varchar(255), email varchar(255), age int)');
 
-  // // Insert some data
-  // var result = await conn.query(
-  //     'insert into users (name, email, age) values (?, ?, ?)',
-  //     ['Bob', 'bob@bob.com', 25]);
-  // print('Inserted row id=${result.insertId}');
+  // Insert some data
+  var result = await conn.query(
+      'insert into users (name, email, age) values (?, ?, ?)',
+      ['Israel', 'israel@bob.com', 27]);
+  print('Inserted row id=${result.insertId}');
 
   // Query the database using a parameterized query
   var results = await conn
-      .query('select nome from pessoa');
+      .query('select name, email from users where id = ?', [result.insertId]);
   for (var row in results) {
-    print('Name: ${row[0]}');
+    Text('Name: ${row[0]}, email: ${row[1]}');
   }
 
   // Finally, close the connection
